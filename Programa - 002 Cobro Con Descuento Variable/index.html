@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa 002 - Cobro con Descuento Variable</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2c3e50; /* Fondo oscuro */
+            color: #ecf0f1; /* Texto claro */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #e74c3c; /* Rojo oscuro */
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        form {
+            background-color: #34495e; /* Gris oscuro */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #7f8c8d;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .result, .breakdown {
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+        .result p, .breakdown p {
+            font-size: 18px;
+            color: #ecf0f1;
+        }
+        .table-container {
+            margin-top: 40px;
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #7f8c8d;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #2c3e50;
+        }
+        tr:hover {
+            background-color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Programa 002 - Cobro con Descuento Variable</h1>
+        <form id="billingForm">
+            <label for="customerName">Nombre del Cliente:</label>
+            <input type="text" id="customerName" required>
+
+            <label for="weightTrainingCost">Costo de Pesas:</label>
+            <input type="number" id="weightTrainingCost" required>
+
+            <label for="aerobicsCost">Costo de Aeróbicos:</label>
+            <input type="number" id="aerobicsCost">
+
+            <label for="spinningCost">Costo de Spinning:</label>
+            <input type="number" id="spinningCost">
+
+            <label for="attendance">Asistencia:</label>
+            <select id="attendance">
+                <option value="1">1 día a la semana</option>
+                <option value="3">3 días a la semana</option>
+                <option value="5">5 días a la semana</option>
+                <option value="7">Todos los días</option>
+            </select>
+
+            <button type="button" class="button" onclick="calculateTotal()">Calcular Costo</button>
+        </form>
+
+        <div class="result" id="result">
+            <p id="totalWithoutDiscount">Costo Total sin Descuento: $0</p>
+            <p id="totalWithDiscount">Costo Total con Descuento: $0</p>
+        </div>
+
+        <!-- Desglose de descuentos y promociones -->
+        <div class="breakdown" id="breakdown">
+            <h2>Desglose de Descuentos y Promociones</h2>
+            <p id="breakdownDetails">Aquí se mostrará el desglose de los descuentos y promociones aplicados.</p>
+        </div>
+
+        <!-- Tabla Explicativa -->
+        <div class="table-container">
+            <h2>Condiciones de Descuentos y Promociones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo de Descuento/Promoción</th>
+                        <th>Condiciones</th>
+                        <th>Descuento Aplicado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Promoción (2 servicios)</td>
+                        <td>Si el cliente tiene 2 servicios pagados</td>
+                        <td>10% de descuento</td>
+                    </tr>
+                    <tr>
+                        <td>Promoción (3 servicios)</td>
+                        <td>Si el cliente tiene 3 servicios pagados</td>
+                        <td>20% de descuento</td>
+                    </tr>
+                    <tr>
+                        <td>Descuento por Asistencia</td>
+                        <td>Dependiendo de los días asistidos por semana</td>
+                        <td>
+                            15% de descuento si asiste 5 días a la semana<br>
+                            20% de descuento si asiste todos los días
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function calculateTotal() {
+            const weightTrainingCost = parseFloat(document.getElementById("weightTrainingCost").value) || 0;
+            const aerobicsCost = parseFloat(document.getElementById("aerobicsCost").value) || 0;
+            const spinningCost = parseFloat(document.getElementById("spinningCost").value) || 0;
+
+            const attendance = parseInt(document.getElementById("attendance").value);
+
+            // Cálculo del total sin descuento
+            let totalWithoutDiscount = weightTrainingCost + aerobicsCost + spinningCost;
+            let totalWithDiscount = totalWithoutDiscount;
+
+            // Contar los servicios pagados
+            const servicesCount = [weightTrainingCost, aerobicsCost, spinningCost].filter(cost => cost > 0).length;
+
+            // Variables para el desglose
+            let breakdownDetails = `Costo Total sin Descuento: $${totalWithoutDiscount.toFixed(2)}<br>`;
+
+            // Operaciones de promoción
+            if (servicesCount === 2) {
+                let promotionDiscount = totalWithoutDiscount * 0.10;  // 10% de descuento si tiene 2 servicios
+                totalWithDiscount -= promotionDiscount;
+                breakdownDetails += `Promoción por 2 servicios: -$${promotionDiscount.toFixed(2)}<br>`;
+            } else if (servicesCount === 3) {
+                let promotionDiscount = totalWithoutDiscount * 0.20;  // 20% de descuento si tiene 3 servicios
+                totalWithDiscount -= promotionDiscount;
+                breakdownDetails += `Promoción por 3 servicios: -$${promotionDiscount.toFixed(2)}<br>`;
+            }
+
+            // Operaciones de descuento por asistencia
+            if (attendance === 5) {
+                let attendanceDiscount = totalWithDiscount * 0.15;  // 15% de descuento por asistir 5 días a la semana
+                totalWithDiscount -= attendanceDiscount;
+                breakdownDetails += `Descuento por asistencia (5 días): -$${attendanceDiscount.toFixed(2)}<br>`;
+            } else if (attendance === 7) {
+                let attendanceDiscount = totalWithDiscount * 0.20;  // 20% de descuento por asistir todos los días
+                totalWithDiscount -= attendanceDiscount;
+                breakdownDetails += `Descuento por asistencia (todos los días): -$${attendanceDiscount.toFixed(2)}<br>`;
+            }
+
+            // Mostrar resultados
+            document.getElementById("totalWithoutDiscount").textContent = `Costo Total sin Descuento: $${totalWithoutDiscount.toFixed(2)}`;
+            document.getElementById("totalWithDiscount").textContent = `Costo Total con Descuento: $${totalWithDiscount.toFixed(2)}`;
+
+            document.getElementById("breakdownDetails").innerHTML = breakdownDetails;
+        }
+    </script>
+</body>
+</html>

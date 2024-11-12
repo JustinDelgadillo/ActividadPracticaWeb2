@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa 003 - Equipos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #003366, #6699cc);
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        h1, h2 {
+            color: #fff;
+        }
+
+        #main-img {
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            object-fit: cover;
+            border: 4px solid #f1c40f;
+            margin-top: 20px;
+        }
+
+        #main-img:hover {
+            transform: scale(1.05);
+        }
+
+        #description {
+            width: 95%;
+            height: 150px;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 30px;
+            border: 3px solid #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            resize: none;
+            text-align: center;
+            line-height: 130px;
+        }
+
+        #description::placeholder {
+            color: #fff;
+            font-size: 30px;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 20px;
+            margin-top: 30px;
+            justify-items: center;
+        }
+
+        .row-1, .row-2, .row-3, .row-4 {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .player-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            border: none;
+            background-color: #003366;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .player-btn:hover {
+            transform: scale(1.1);
+            background-color: #f1c40f;
+            color: #003366;
+        }
+
+        .player-btn:focus {
+            outline: none;
+            background-color: #f1c40f;
+            color: #003366;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Programa 003 - Equipos</h1>
+    <h2>Real Madrid - Liverpool</h2>
+    <h2>Alineación Campeona, Kiev 2018</h2>
+
+    <img id="main-img" src="file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/RealMadrid.jpg" alt="Imagen Principal">
+
+    <textarea id="description" readonly placeholder="Selecciona un jugador para ver su descripción."></textarea>
+
+    <div class="button-container">
+        <div class="row-1">
+            <button class="player-btn" id="keylor-btn">Keylor Navas</button>
+        </div>
+        <div class="row-2">
+            <button class="player-btn" id="carvajal-btn">Dani Carvajal</button>
+            <button class="player-btn" id="ramos-btn">Sergio Ramos</button>
+            <button class="player-btn" id="varane-btn">Raphael Varane</button>
+            <button class="player-btn" id="marcelo-btn">Marcelo</button>
+        </div>
+        <div class="row-3">
+            <button class="player-btn" id="modric-btn">Luka Modric</button>
+            <button class="player-btn" id="casemiro-btn">Casemiro</button>
+            <button class="player-btn" id="kroos-btn">Toni Kroos</button>
+        </div>
+        <div class="row-4">
+            <button class="player-btn" id="bale-btn">Gareth Bale</button>
+            <button class="player-btn" id="benzema-btn">Karim Benzema</button>
+            <button class="player-btn" id="cristiano-btn">Cristiano Ronaldo</button>
+        </div>
+    </div>
+
+    <script>
+        const descriptions = {
+            "keylor": "Keylor Navas es un arquero costarricense, reconocido por sus reflejos y seguridad bajo el arco.",
+            "carvajal": "Dani Carvajal es un lateral derecho español, conocido por su velocidad y habilidades defensivas.",
+            "ramos": "Sergio Ramos es un defensor central español, destacado por su liderazgo y su capacidad goleadora en momentos clave.",
+            "varane": "Raphael Varane es un defensor central francés, conocido por su velocidad, solidez defensiva y capacidad para jugar bajo presión.",
+            "marcelo": "Marcelo es un lateral izquierdo brasileño, famoso por su capacidad ofensiva y su habilidad para asistir.",
+            "casemiro": "Casemiro es un mediocampista defensivo brasileño, reconocido por su gran capacidad de recuperación y apoyo defensivo.",
+            "kroos": "Toni Kroos es un mediocampista alemán, famoso por su visión de juego y precisión en los pases.",
+            "modric": "Luka Modric es un mediocampista croata, destacado por su agilidad, control del balón y su capacidad para dictar el ritmo del partido.",
+            "cristiano": "Cristiano Ronaldo es un delantero portugués, uno de los mejores futbolistas de la historia, conocido por su habilidad de anotación y destreza.",
+            "bale": "Gareth Bale es un extremo galés, reconocido por su velocidad, potencia física y habilidad para marcar goles importantes.",
+            "benzema": "Karim Benzema es un delantero francés, famoso por su inteligencia táctica, habilidades de finalización y contribuciones a los goles del equipo."
+        };
+
+        let selectedPlayer = null;
+
+        function changeImageAndDescription(imageSrc, descriptionText) {
+            const img = document.getElementById("main-img");
+            img.src = imageSrc;
+            img.style.width = '350px';
+            img.style.height = '350px';
+            img.style.objectFit = 'cover';
+            document.getElementById("description").value = descriptionText;
+        }
+
+        function setupPlayerButton(buttonId, imageSrc, playerKey) {
+            const button = document.getElementById(buttonId);
+            
+            button.addEventListener("mouseenter", function() {
+                if (selectedPlayer !== playerKey) {
+                    changeImageAndDescription(imageSrc, "");
+                    document.getElementById("description").placeholder = "";
+                }
+            });
+            
+            button.addEventListener("mouseleave", function() {
+                if (selectedPlayer !== playerKey) {
+                    changeImageAndDescription("file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/RealMadrid.jpg", "Selecciona un jugador para ver su descripción.");
+                }
+            });
+            
+            button.addEventListener("click", function() {
+                selectedPlayer = playerKey;
+                changeImageAndDescription(imageSrc, descriptions[playerKey]);
+            });
+        }
+
+        setupPlayerButton("keylor-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/KeylorNavas.jpg", "keylor");
+        setupPlayerButton("carvajal-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/DaniCarvajal.jpg", "carvajal");
+        setupPlayerButton("ramos-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/SergioRamos.jpg", "ramos");
+        setupPlayerButton("varane-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/RaphaelVarane.jpg", "varane");
+        setupPlayerButton("marcelo-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/Marcelo.jpg", "marcelo");
+        setupPlayerButton("modric-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/LukaModric.jpg", "modric");
+        setupPlayerButton("casemiro-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/Casemiro.jpg", "casemiro");
+        setupPlayerButton("kroos-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/ToniKroos.jpg", "kroos");
+        setupPlayerButton("bale-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/GarethBale.jpg", "bale");
+        setupPlayerButton("benzema-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/KarimBenzema.jpg", "benzema");
+        setupPlayerButton("cristiano-btn", "file:///C:/Users/user/Desktop/TAREAS%20JUSTIN/7mo%20Semestre/Programación%20Web%202/2do%20Bloque%20de%20Evaluación/Actividad%20Práctica/Imágenes%20Programa%203/CristianoRonaldo.jpg", "cristiano");
+    </script>
+</body>
+</html>

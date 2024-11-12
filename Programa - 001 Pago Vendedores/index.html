@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa 001 - Pago Vendedores</title>
+    <style>
+        /* Estilos Generales */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            background-color: #2e2e3a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-in-out;
+        }
+        h2 {
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        /* Animación de aparición */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Estilos del Formulario */
+        label {
+            display: block;
+            font-weight: bold;
+            color: #d3d3d3;
+            margin-top: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #4a4a5e;
+            color: #fff;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #a2d2ff;
+            outline: none;
+        }
+
+        /* Estilos del Botón */
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #00b894;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #009973;
+            transform: scale(1.05);
+        }
+
+        /* Estilos de la Tabla con Desplazamiento */
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #39394c;
+            color: #e3e3e3;
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4a4a5e;
+            color: #e3e3e3;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #3c3c50;
+        }
+        tbody tr:hover {
+            background-color: #2e2e3a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Programa 001 - Pago Vendedores</h2>
+    <form id="salesForm">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" required>
+
+        <label for="baseSalary">Sueldo Base:</label>
+        <input type="number" id="baseSalary" required>
+
+        <label for="sale1">Venta 1:</label>
+        <input type="number" id="sale1" required>
+
+        <label for="sale2">Venta 2:</label>
+        <input type="number" id="sale2" required>
+
+        <label for="sale3">Venta 3:</label>
+        <input type="number" id="sale3" required>
+
+        <button type="button" onclick="calculatePayment()">Calcular Pago</button>
+    </form>
+
+    <div class="table-container">
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Sueldo Base</th>
+                    <th>Venta 1</th>
+                    <th>Venta 2</th>
+                    <th>Venta 3</th>
+                    <th>Comisión Total</th>
+                    <th>Pago Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function calculateCommission(sale) {
+        if (sale < 2000) {
+            return 0;
+        } else if (sale >= 2000 && sale <= 5000) {
+            return sale * 0.05;
+        } else {
+            return sale * 0.10;
+        }
+    }
+
+    function calculatePayment() {
+        const name = document.getElementById("name").value;
+        const baseSalary = parseFloat(document.getElementById("baseSalary").value);
+        const sale1 = parseFloat(document.getElementById("sale1").value);
+        const sale2 = parseFloat(document.getElementById("sale2").value);
+        const sale3 = parseFloat(document.getElementById("sale3").value);
+
+        const commission1 = calculateCommission(sale1);
+        const commission2 = calculateCommission(sale2);
+        const commission3 = calculateCommission(sale3);
+
+        const totalCommission = commission1 + commission2 + commission3;
+        const totalPayment = baseSalary + totalCommission;
+
+        const resultTable = document.getElementById("resultTable").getElementsByTagName("tbody")[0];
+        const newRow = resultTable.insertRow();
+
+        newRow.innerHTML = `
+            <td>${name}</td>
+            <td>$${baseSalary.toFixed(2)}</td>
+            <td>$${sale1.toFixed(2)}</td>
+            <td>$${sale2.toFixed(2)}</td>
+            <td>$${sale3.toFixed(2)}</td>
+            <td>$${totalCommission.toFixed(2)}</td>
+            <td>$${totalPayment.toFixed(2)}</td>
+        `;
+
+        document.getElementById("salesForm").reset();
+    }
+</script>
+
+</body>
+</html>
